@@ -32,8 +32,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go
-#      - name: Bring up kafka + zk
-#        run: docker-compose up -d
       - name: Bring up kafka + zk
         uses: hoverkraft-tech/compose-action@v2.3.0
         with:
