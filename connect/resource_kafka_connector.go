@@ -159,7 +159,7 @@ func connectorUpdate(d *schema.ResourceData, meta interface{}) error {
 	timeout := d.Timeout(schema.TimeoutUpdate) - elapsed
 
 	return retry.RetryContext(context.TODO(), timeout, func() *retry.RetryError {
-		if err := connectorRead(d, meta); err == nil {
+		if err := connectorRead(d, meta); err != nil {
 			if isRebalanceExpectedError(err) {
 				return retry.RetryableError(err)
 			} else {
