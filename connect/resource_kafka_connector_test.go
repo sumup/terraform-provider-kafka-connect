@@ -87,7 +87,7 @@ resource "kafka-connect_connector" "test" {
   name = "sqlite-sink"
 
   config = {
-		"name" = "sqlite-sink"
+	"name" = "sqlite-sink"
     "connector.class" = "io.confluent.connect.jdbc.JdbcSinkConnector"
     "tasks.max"       = "2"
     "topics"          = "orders"
@@ -102,7 +102,7 @@ resource "kafka-connect_connector" "test" {
   name = "sqlite-sink"
 
   config = {
-		"name" = "sqlite-sink"
+	"name" = "sqlite-sink"
     "connector.class" = "io.confluent.connect.jdbc.JdbcSinkConnector"
     "tasks.max"       = "1"
     "topics"          = "orders"

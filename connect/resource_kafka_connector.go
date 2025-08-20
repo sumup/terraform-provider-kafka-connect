@@ -1,10 +1,14 @@
 package connect
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
+	"strings"
+	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	kc "github.com/ricardo-ch/go-kafka-connect/lib/connectors"
 )
@@ -105,7 +109,15 @@ func connectorDelete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
+// github.com/ricardo-ch/go-kafka-connect doesn't return any typed errors, so the only
+// way is to check the error string
+func isRebalanceExpectedError(err error) bool {
+	return strings.Contains(err.Error(), "rebalance is expected")
+}
+
 func connectorUpdate(d *schema.ResourceData, meta interface{}) error {
+	start := time.Now()
+
 	c := meta.(kc.HighLevelClient)
 
 	name := nameFromRD(d)
@@ -141,7 +153,21 @@ func connectorUpdate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	return connectorRead(d, meta)
+	elapsed := time.Since(start)
+	// take the whole timeout budget for schema.TimeoutUpdate and subtract the time
+	// we have spent so far for UpdateConnector
+	timeout := d.Timeout(schema.TimeoutUpdate) - elapsed
+
+	return retry.RetryContext(context.TODO(), timeout, func() *retry.RetryError {
+		if err := connectorRead(d, meta); err != nil {
+			if isRebalanceExpectedError(err) {
+				return retry.RetryableError(err)
+			} else {
+				return retry.NonRetryableError(err)
+			}
+		}
+		return nil
+	})
 }
 
 func connectorRead(d *schema.ResourceData, meta interface{}) error {
