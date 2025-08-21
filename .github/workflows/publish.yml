@@ -13,7 +13,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_TOKEN: ${{ secrets.TFCLOUD_API_KEY }}
-          TF_GPG_KEY_ID: ${{ secrets.TFCLOUD_GPG_KEY_ID }}
+          TF_GPG_KEY_ID: AE945AFA1EA7032E
           TF_REGISTRY_NAME: private
           TF_ORGANIZATION_NAME: sumup
           TF_NAMESPACE: sumup
