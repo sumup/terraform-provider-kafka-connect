@@ -1,0 +1,20 @@
+name: Publish
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF_NAME: v0.3.2
+    steps:
+      - uses: dcarbone/tfcloud-provider-push-action@v0.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_TOKEN: ${{ secrets.TFCLOUD_API_KEY }}
+          TF_GPG_KEY_ID: ${{ secrets.TFCLOUD_GPG_KEY_ID }}
+          TF_REGISTRY_NAME: private
+          TF_ORGANIZATION_NAME: sumup
+          TF_NAMESPACE: sumup
+          TF_PROVIDER_NAME: kafka-connect
