@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: dcarbone/tfcloud-provider-push-action@v0.3.0
         env:
-          GITHUB_REF_NAME: v0.3.2
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_TOKEN: ${{ secrets.TFCLOUD_API_KEY }}
           TF_GPG_KEY_ID: AE945AFA1EA7032E
