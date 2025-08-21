@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  create-release:
+  publish:
     runs-on: ubuntu-latest
     env:
       GITHUB_REF_NAME: v0.3.2
