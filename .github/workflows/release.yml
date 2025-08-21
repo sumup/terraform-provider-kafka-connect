@@ -66,7 +66,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: dcarbone/tfcloud-provider-push-action@v0.3.0
+      - uses: dcarbone/tfcloud-provider-push-action@04543a55d925f7cfbfc79f0c0e374a9253728ea5 #v0.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_TOKEN: ${{ secrets.TFCLOUD_API_KEY }}
