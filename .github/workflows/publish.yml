@@ -5,6 +5,9 @@ on:
 
 jobs:
   publish:
+    permissions:
+      contents: read
+
     runs-on: ubuntu-latest
     env:
       GITHUB_REF_NAME: v0.3.2
