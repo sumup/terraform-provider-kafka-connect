@@ -88,10 +88,8 @@ func TestBackfillExecuteSuccess(t *testing.T) {
 func TestBackfillExecuteError(t *testing.T) {
 	const backfillID = "backfill-123"
 
-	expectedErr := errors.New("could not execute backfill: Titanic returned an errorwith id: backfill-123")
-
 	client := &fakeBackfillExecutor{
-		executeError: expectedErr,
+		executeError: errors.New("Titanic returned an error"),
 	}
 
 	meta := &ProviderMeta{
@@ -103,11 +101,10 @@ func TestBackfillExecuteError(t *testing.T) {
 	err := backfillExecute(data, meta)
 
 	require.Error(t, err)
-	assert.ErrorIs(t, err, expectedErr)
 	assert.EqualError(
 		t,
 		err,
-		`could not execute backfill: Titanic returned an errorwith id: backfill-123`,
+		`could not execute backfill: Titanic returned an error with id: backfill-123`,
 	)
 	assert.Equal(t, 1, client.calls)
 	assert.Equal(t, backfillID, client.executedID)

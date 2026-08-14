@@ -33,7 +33,7 @@ func backfillExecute(d *schema.ResourceData, meta interface{}) error {
 
 	err := client.ExecuteBackfill(context.Background(), backfillID)
 	if err != nil {
-		return errors.New("could not execute backfill: " + err.Error() + "with id: " + backfillID)
+		return errors.New("could not execute backfill: " + err.Error() + " with id: " + backfillID)
 	}
 
 	d.SetId(backfillID)
