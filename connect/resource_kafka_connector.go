@@ -56,7 +56,8 @@ func setNameFromID(d *schema.ResourceData, meta interface{}) ([]*schema.Resource
 }
 
 func connectorCreate(d *schema.ResourceData, meta interface{}) error {
-	c := meta.(kc.HighLevelClient)
+	metaStruct := meta.(*ProviderMeta)
+	c := metaStruct.KafkaClient
 	name := nameFromRD(d)
 
 	config, sensitiveCache := configFromRD(d)
@@ -92,7 +93,8 @@ func connectorCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func connectorDelete(d *schema.ResourceData, meta interface{}) error {
-	c := meta.(kc.HighLevelClient)
+	metaStruct := meta.(*ProviderMeta)
+	c := metaStruct.KafkaClient
 
 	name := nameFromRD(d)
 	req := kc.ConnectorRequest{
@@ -118,7 +120,8 @@ func isRebalanceExpectedError(err error) bool {
 func connectorUpdate(d *schema.ResourceData, meta interface{}) error {
 	start := time.Now()
 
-	c := meta.(kc.HighLevelClient)
+	metaStruct := meta.(*ProviderMeta)
+	c := metaStruct.KafkaClient
 
 	name := nameFromRD(d)
 
@@ -171,7 +174,8 @@ func connectorUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func connectorRead(d *schema.ResourceData, meta interface{}) error {
-	c := meta.(kc.HighLevelClient)
+	metaStruct := meta.(*ProviderMeta)
+	c := metaStruct.KafkaClient
 
 	config, sensitiveCache := configFromRD(d)
 	name := d.Get("name").(string)
