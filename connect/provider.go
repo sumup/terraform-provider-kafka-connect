@@ -100,10 +100,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	titanicURL := d.Get("titanic_url").(string)
 
-	if titanicURL == "" {
-		titanicURL = addr
-	}
-
 	titanicClient, err := titanic.NewClient(titanicURL)
 	if err != nil {
 		log.Fatalf("can not create titanic client: %s", err)
