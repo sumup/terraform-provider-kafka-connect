@@ -1,12 +1,23 @@
 package connect
 
 import (
+	"context"
 	"crypto/tls"
 	"log"
 
+	"github.com/Mongey/terraform-provider-kafka-connect/titanic"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	kc "github.com/ricardo-ch/go-kafka-connect/lib/connectors"
 )
+
+type Titanic interface {
+	ExecuteBackfill(ctx context.Context, id string) error
+}
+
+type ProviderMeta struct {
+	KafkaClient   kc.HighLevelClient
+	TitanicClient Titanic
+}
 
 func Provider() *schema.Provider {
 	log.Printf("[INFO] Creating Provider")
@@ -16,6 +27,12 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("KAFKA_CONNECT_URL", ""),
+			},
+			"titanic_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("TITANIC_URL", ""),
+				Description: "The base URL for the Titanic backfill service.",
 			},
 			"basic_auth_username": {
 				Type:        schema.TypeString,
@@ -46,6 +63,7 @@ func Provider() *schema.Provider {
 		ConfigureFunc: providerConfigure,
 		ResourcesMap: map[string]*schema.Resource{
 			"kafka-connect_connector": kafkaConnectorResource(),
+			"kafka-connect_backfill":  kafkaConnectBackfillResource(),
 		},
 	}
 	log.Printf("[INFO] Created provider: %v", provider)
@@ -79,5 +97,18 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			c.SetClientCertificates(cert)
 		}
 	}
-	return c, nil
+
+	titanicURL := d.Get("titanic_url").(string)
+
+	titanicClient, err := titanic.NewClient(titanicURL)
+	if err != nil {
+		log.Fatalf("can not create titanic client: %s", err)
+	}
+
+	meta := &ProviderMeta{
+		KafkaClient:   c,
+		TitanicClient: titanicClient,
+	}
+
+	return meta, nil
 }
