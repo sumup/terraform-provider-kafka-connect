@@ -56,7 +56,7 @@ jobs:
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_PAT_2 }}
 
   publish:
     permissions:
@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: dcarbone/tfcloud-provider-push-action@04543a55d925f7cfbfc79f0c0e374a9253728ea5 #v0.3.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_PAT_2 }}
           TF_TOKEN: ${{ secrets.TFCLOUD_API_KEY }}
           TF_GPG_KEY_ID: AE945AFA1EA7032E
           TF_REGISTRY_NAME: private
