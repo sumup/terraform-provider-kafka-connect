@@ -12,6 +12,8 @@ import (
 
 type Titanic interface {
 	ExecuteBackfill(ctx context.Context, id string) error
+	GetBackfill(ctx context.Context, id string) (*titanic.Backfill, error)
+	GetBackfillsByConnectorName(ctx context.Context, connectorName string) ([]titanic.Backfill, error)
 }
 
 type ProviderMeta struct {
